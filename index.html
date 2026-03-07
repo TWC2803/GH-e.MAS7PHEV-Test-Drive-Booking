@@ -349,30 +349,43 @@
   }
 
   @media(max-width:640px){
-    .hero-strip { padding: 20px 16px 24px; }
-    .hero-title { font-size: 1.3rem; }
-    .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .kpi-val { font-size: 1.9rem; }
-    .kpi-icon { font-size: 1.2rem; }
-    .kpi { padding: 14px 16px; }
-
-    /* Hide table, show cards on mobile */
-    .tshell table { display: none; }
-    .mobile-cards { display: block; padding: 12px; }
-    .sync-row { padding: 10px 12px; }
-
-    /* Toolbar adjustments */
-    .toolbar { gap: 8px; }
-    .fgroup { flex-wrap: wrap; }
-    .fb { padding: 6px 12px; font-size: 0.75rem; }
-    .sbox { margin-left: 0; width: 100%; }
-    .sbox input { width: 100%; }
-    .refresh-btn { padding: 8px 12px; font-size: 0.75rem; }
-
     /* Header */
+    header { padding: 0 16px; }
+    .header-inner { height: auto; padding: 12px 0; flex-wrap: wrap; gap: 8px; }
     .hdr-pill.date { display: none; }
-    .logo-name { font-size: 0.95rem; }
-    .logo-sub { font-size: 0.55rem; }
+    .logo-name { font-size: 1rem; }
+    .logo-sub { font-size: 0.58rem; }
+
+    /* Hero */
+    .hero-strip { padding: 16px 16px 20px; }
+    .hero-title { font-size: 1.2rem; }
+    .hero-sub { font-size: 0.75rem; margin-bottom: 16px; }
+    .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .kpi-val { font-size: 1.8rem; }
+    .kpi-icon { font-size: 1.1rem; }
+    .kpi { padding: 12px 14px; }
+    .kpi-lbl { font-size: 0.58rem; margin-bottom: 6px; }
+    .kpi-sub { font-size: 0.65rem; }
+
+    /* Main */
+    main { padding: 16px 16px 40px; }
+
+    /* Toolbar — stack into 2 rows */
+    .toolbar { gap: 8px; flex-wrap: wrap; }
+    .fgroup { width: 100%; justify-content: space-between; }
+    .fb { flex: 1; text-align: center; padding: 8px 6px; font-size: 0.75rem; }
+    .refresh-btn { font-size: 0.75rem; padding: 8px 12px; }
+    .sbox { margin-left: 0; width: 100%; order: 3; }
+    .sbox input { width: 100%; font-size: 0.82rem; }
+
+    /* Hide table on mobile, show cards */
+    .tshell table { display: none; }
+    .mobile-cards { display: block; padding: 10px; }
+    .sync-row { padding: 10px 12px; flex-direction: column; gap: 4px; text-align: center; }
+
+    /* Cards */
+    .booking-card { padding: 14px; }
+    .card-name { font-size: 0.9rem; }
   }
 </style>
 </head>
