@@ -310,17 +310,69 @@
   }
   footer span { color: var(--teal); }
 
+  /* ── MOBILE CARD VIEW ── */
+  .mobile-cards { display: none; }
+  .booking-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    animation: rise 0.3s ease both;
+  }
+  .card-top {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 12px;
+  }
+  .card-customer { display: flex; align-items: center; gap: 10px; }
+  .card-name { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+  .card-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+  .card-label { color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card-val { font-weight: 700; color: var(--text); }
+  .card-time { font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--teal); font-size: 1rem; }
+
   @media(max-width:1000px){
     .hero-strip, main { padding-left: 16px; padding-right: 16px; }
-    header .header-inner { padding: 0 16px; }
-    .kpis { grid-template-columns: repeat(2,1fr); }
-    .sbox input { width: 170px; }
+    header { padding: 0 16px; }
+    .header-inner { padding: 0 !important; }
+    .kpis { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .sbox input { width: 160px; }
+    .kpi { padding: 16px 18px; }
+    .kpi-val { font-size: 2.2rem; }
   }
-  @media(max-width:600px){
-    .kpis { grid-template-columns: 1fr 1fr; }
-    .kpi-val { font-size: 2rem; }
-    th:nth-child(5),td:nth-child(5) { display:none; }
-    .td-date .dd { display:none; }
+
+  @media(max-width:640px){
+    .hero-strip { padding: 20px 16px 24px; }
+    .hero-title { font-size: 1.3rem; }
+    .kpis { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .kpi-val { font-size: 1.9rem; }
+    .kpi-icon { font-size: 1.2rem; }
+    .kpi { padding: 14px 16px; }
+
+    /* Hide table, show cards on mobile */
+    .tshell table { display: none; }
+    .mobile-cards { display: block; padding: 12px; }
+    .sync-row { padding: 10px 12px; }
+
+    /* Toolbar adjustments */
+    .toolbar { gap: 8px; }
+    .fgroup { flex-wrap: wrap; }
+    .fb { padding: 6px 12px; font-size: 0.75rem; }
+    .sbox { margin-left: 0; width: 100%; }
+    .sbox input { width: 100%; }
+    .refresh-btn { padding: 8px 12px; font-size: 0.75rem; }
+
+    /* Header */
+    .hdr-pill.date { display: none; }
+    .logo-name { font-size: 0.95rem; }
+    .logo-sub { font-size: 0.55rem; }
   }
 </style>
 </head>
@@ -416,6 +468,7 @@
         </td></tr>
       </tbody>
     </table>
+    <div class="mobile-cards" id="mobileCards"></div>
     <div class="sync-row">
       <span class="sync-txt">Auto-syncs every 3 min · Last sync: <span id="syncTime">—</span></span>
       <span class="sync-txt" id="syncCount">—</span>
@@ -577,6 +630,61 @@ function render(){
       <td>${r.phone?`<span class="ph"><a href="tel:${r.phone}">${r.phone}</a></span>`:'<span style="color:var(--muted)">—</span>'}</td>
       <td>${badges[status]||badges.unknown}</td>
     </tr>`;
+  }).join('');
+
+  // Mobile cards
+  renderCards(data);
+}
+
+function renderCards(data) {
+  const mc = document.getElementById('mobileCards');
+  if (!mc) return;
+  if (!data.length) { mc.innerHTML = ''; return; }
+
+  const badges = {
+    today:   `<span class="tpill tpill-today"><span class="tpill-dot"></span>Today</span>`,
+    upcoming:`<span class="tpill tpill-up"><span class="tpill-dot"></span>Upcoming</span>`,
+    past:    `<span class="tpill tpill-past"><span class="tpill-dot"></span>Done</span>`,
+    unknown: `<span class="tpill tpill-past">—</span>`
+  };
+
+  mc.innerHTML = data.map((r, i) => {
+    const status = getStatus(r);
+    const ini = (r.name.split(' ').map(w=>w[0]||'').join('').substring(0,2)||'??').toUpperCase();
+    let ds = r.date;
+    try {
+      const pts = r.date.split('/');
+      if (pts.length===3) {
+        const d = new Date(`${pts[2]}-${pts[1]}-${pts[0]}`);
+        if (!isNaN(d)) ds = d.toLocaleDateString('en-MY',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kuching'});
+      }
+    } catch{}
+
+    return `<div class="booking-card" style="animation-delay:${i*0.04}s">
+      <div class="card-top">
+        <div class="card-customer">
+          <div class="av">${ini}</div>
+          <div class="card-name">${r.name||'—'}</div>
+        </div>
+        ${badges[status]||badges.unknown}
+      </div>
+      <div class="card-row">
+        <span class="card-label">Date</span>
+        <span class="card-val">${ds||'—'}</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">Time</span>
+        <span class="card-time">${r.time||'—'}</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">SA</span>
+        <span class="card-val">${r.sa||'—'}</span>
+      </div>
+      <div class="card-row">
+        <span class="card-label">Phone</span>
+        <span class="card-val">${r.phone ? `<a href="tel:${r.phone}" style="color:var(--blue);text-decoration:none">${r.phone}</a>` : '—'}</span>
+      </div>
+    </div>`;
   }).join('');
 }
 
