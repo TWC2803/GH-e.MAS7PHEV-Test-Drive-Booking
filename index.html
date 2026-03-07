@@ -469,12 +469,11 @@
           <th onclick="sortBy('time')" id="th-time">Time ↕</th>
           <th>Customer</th>
           <th onclick="sortBy('sa')" id="th-sa">SA Name ↕</th>
-          <th>Phone</th>
           <th>Status</th>
         </tr>
       </thead>
       <tbody id="tbody">
-        <tr class="state-row"><td colspan="6">
+        <tr class="state-row"><td colspan="5">
           <div class="se">📋</div>
           <div class="st">Loading bookings…</div>
           <div class="ss"><span class="spin2"></span>Syncing from Google Sheets</div>
@@ -593,7 +592,6 @@ function render(){
     data=data.filter(r=>
       r.name.toLowerCase().includes(q)||
       (r.sa||'').toLowerCase().includes(q)||
-      (r.phone||'').toLowerCase().includes(q)||
       r.date.toLowerCase().includes(q)
     );
   }
@@ -640,7 +638,6 @@ function render(){
       <td class="td-time">${r.time||'—'}</td>
       <td><div class="cc"><div class="av">${ini}</div><div class="cn">${r.name||'—'}</div></div></td>
       <td>${r.sa?`<span class="sa-chip">👤 ${r.sa}</span>`:'<span style="color:var(--muted)">—</span>'}</td>
-      <td>${r.phone?`<span class="ph"><a href="tel:${r.phone}">${r.phone}</a></span>`:'<span style="color:var(--muted)">—</span>'}</td>
       <td>${badges[status]||badges.unknown}</td>
     </tr>`;
   }).join('');
@@ -693,16 +690,13 @@ function renderCards(data) {
         <span class="card-label">SA</span>
         <span class="card-val">${r.sa||'—'}</span>
       </div>
-      <div class="card-row">
-        <span class="card-label">Phone</span>
-        <span class="card-val">${r.phone ? `<a href="tel:${r.phone}" style="color:var(--blue);text-decoration:none">${r.phone}</a>` : '—'}</span>
-      </div>
+
     </div>`;
   }).join('');
 }
 
 function empty(t,s){
-  document.getElementById('tbody').innerHTML=`<tr class="state-row"><td colspan="6">
+  document.getElementById('tbody').innerHTML=`<tr class="state-row"><td colspan="5">
     <div class="se">📋</div><div class="st">${t}</div><div class="ss">${s}</div>
   </td></tr>`;
 }
